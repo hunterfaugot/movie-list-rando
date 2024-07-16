@@ -1,11 +1,11 @@
 // src/utils/withAuth.js
 
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { auth } from './firebase';
 
-const withAuth = (WrappedComponent) => {
-  return (props) => {
+const withAuth = (Component) => {
+  const Auth = (props) => {
     const router = useRouter();
 
     useEffect(() => {
@@ -18,8 +18,12 @@ const withAuth = (WrappedComponent) => {
       return () => unsubscribe();
     }, [router]);
 
-    return <WrappedComponent {...props} />;
+    return <Component {...props} />;
   };
+
+  Auth.displayName = `withAuth(${Component.displayName || Component.name || 'Component'})`;
+
+  return Auth;
 };
 
 export default withAuth;
