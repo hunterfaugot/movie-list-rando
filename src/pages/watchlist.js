@@ -7,6 +7,7 @@ import SearchMovies from '../components/SearchMovies';
 import { useState, useEffect } from 'react';
 import { firestore, auth } from '../utils/firebase';
 import { collection, addDoc, getDocs, query, where, deleteDoc, doc } from 'firebase/firestore';
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import styles from '../styles/Watchlist.module.css';
 
 const Watchlist = () => {
@@ -76,6 +77,16 @@ const Watchlist = () => {
     }
   };
 
+  const onDragEnd = (result) => {
+    if (!result.destination) return;
+
+    const items = Array.from(watchlist);
+    const [reorderedItem] = items.splice(result.source.index, 1);
+    items.splice(result.destination.index, 0, reorderedItem);
+
+    setWatchlist(items);
+  };
+
   return (
     <Layout>
       <div className={styles.container}>
@@ -84,18 +95,35 @@ const Watchlist = () => {
         </div>
         <div className={styles.watchlistColumn}>
           <button onClick={pickRandomMovie} className={styles.randomButton}>Pick a Random Movie</button>
-          <ul className={styles.watchlist}>
-            {watchlist.map((movie) => (
-              <li key={movie.id} className={styles.watchlistItem}>
-                <img src={`https://image.tmdb.org/t/p/w200${movie.poster_path}`} alt={movie.title} />
-                <div>
-                  {movie.title} ({movie.release_date?.substring(0, 4)})
-                  <p>Director: {movie.director}</p>
-                  <button onClick={() => handleRemoveMovie(movie.id)}>Remove</button>
-                </div>
-              </li>
-            ))}
-          </ul>
+          <DragDropContext onDragEnd={onDragEnd}>
+            <Droppable droppableId="watchlist">
+              {(provided) => (
+                <ul className={styles.watchlist} {...provided.droppableProps} ref={provided.innerRef}>
+                  {watchlist.map((movie, index) => (
+                    <Draggable key={movie.id} draggableId={movie.id} index={index}>
+                      {(provided) => (
+                        <li
+                          className={styles.watchlistItem}
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                        >
+                          <span className={styles.movieIndex}>{index + 1}. </span>
+                          <img src={`https://image.tmdb.org/t/p/w200${movie.poster_path}`} alt={movie.title} />
+                          <div>
+                            {movie.title} ({movie.release_date?.substring(0, 4)})
+                            <p>Director: {movie.director}</p>
+                            <button onClick={() => handleRemoveMovie(movie.id)}>Remove</button>
+                          </div>
+                        </li>
+                      )}
+                    </Draggable>
+                  ))}
+                  {provided.placeholder}
+                </ul>
+              )}
+            </Droppable>
+          </DragDropContext>
         </div>
       </div>
     </Layout>
