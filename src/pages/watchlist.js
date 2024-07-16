@@ -6,7 +6,7 @@ import Layout from '../components/Layout';
 import SearchMovies from '../components/SearchMovies';
 import { useState, useEffect } from 'react';
 import { firestore, auth } from '../utils/firebase';
-import { collection, addDoc, getDocs, query, where, deleteDoc, doc } from 'firebase/firestore';
+import { collection, addDoc, getDocs, query, where, deleteDoc, doc, orderBy, writeBatch } from 'firebase/firestore';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import styles from '../styles/Watchlist.module.css';
 
@@ -27,7 +27,7 @@ const Watchlist = () => {
 
   const fetchWatchlist = async (uid) => {
     try {
-      const q = query(collection(firestore, 'watchlist'), where('uid', '==', uid));
+      const q = query(collection(firestore, 'watchlist'), where('uid', '==', uid), orderBy('order'));
       const querySnapshot = await getDocs(q);
       const movies = [];
       querySnapshot.forEach((doc) => {
@@ -43,6 +43,7 @@ const Watchlist = () => {
     if (!user) return;
 
     try {
+      const order = watchlist.length + 1; // Next order number
       await addDoc(collection(firestore, 'watchlist'), {
         uid: user.uid,
         title: movie.title,
@@ -50,6 +51,7 @@ const Watchlist = () => {
         tmdb_id: movie.id,
         poster_path: movie.poster_path,
         director: movie.credits.crew.find((member) => member.job === 'Director')?.name,
+        order: order,
       });
       fetchWatchlist(user.uid);
     } catch (error) {
@@ -77,14 +79,27 @@ const Watchlist = () => {
     }
   };
 
-  const onDragEnd = (result) => {
+  const onDragEnd = async (result) => {
     if (!result.destination) return;
 
     const items = Array.from(watchlist);
     const [reorderedItem] = items.splice(result.source.index, 1);
     items.splice(result.destination.index, 0, reorderedItem);
 
+    // Update local state
     setWatchlist(items);
+
+    // Update Firestore
+    try {
+      const batch = writeBatch(firestore);
+      items.forEach((item, index) => {
+        const docRef = doc(firestore, 'watchlist', item.id);
+        batch.update(docRef, { order: index + 1 });
+      });
+      await batch.commit();
+    } catch (error) {
+      alert('Error updating order: ' + error.message);
+    }
   };
 
   return (
