@@ -1,5 +1,9 @@
 /* src/styles/globals.css */
 
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 body {
   margin: 0;
   padding: 0;
@@ -9,8 +13,8 @@ body {
 }
 
 nav {
-  background-color: #333;
-  padding: 10px;
+  background-color: #333 !important;
+  padding: 10px !important;
 }
 
 nav ul {
@@ -20,5 +24,3 @@ nav ul {
   margin: 0;
   padding: 0;
 }
-
-

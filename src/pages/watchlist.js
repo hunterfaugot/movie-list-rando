@@ -8,7 +8,6 @@ import { useState, useEffect } from 'react';
 import { firestore, auth } from '../utils/firebase';
 import { collection, addDoc, getDocs, query, where, deleteDoc, doc, orderBy, writeBatch, updateDoc } from 'firebase/firestore';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-import styles from '../styles/Watchlist.module.css';
 
 const Watchlist = () => {
   const [watchlist, setWatchlist] = useState([]);
@@ -114,39 +113,40 @@ const Watchlist = () => {
 
   return (
     <Layout>
-      <div className={styles.container}>
-        <div className={styles.searchColumn}>
+      <div className="flex justify-between p-4 h-screen">
+        <div className="flex-1 mr-4 overflow-y-auto">
           <SearchMovies onAddMovie={handleAddMovie} />
         </div>
-        <div className={styles.watchlistColumn}>
-          <button onClick={pickRandomMovie} className={styles.randomButton}>Pick a Random Movie</button>
+        <div className="flex-1 ml-4 flex flex-col overflow-y-auto">
+          <button onClick={pickRandomMovie} className="mb-4 btn btn-primary">Pick a Random Movie</button>
           <DragDropContext onDragEnd={onDragEnd}>
             <Droppable droppableId="watchlist">
               {(provided) => (
-                <ul className={styles.watchlist} {...provided.droppableProps} ref={provided.innerRef}>
+                <ul className="list-none p-0" {...provided.droppableProps} ref={provided.innerRef}>
                   {watchlist.map((movie, index) => (
                     <Draggable key={movie.id} draggableId={movie.id} index={index}>
                       {(provided) => (
                         <li
-                          className={styles.watchlistItem}
+                          className="flex items-center p-4 mb-4 border border-gray-300 bg-white"
                           ref={provided.innerRef}
                           {...provided.draggableProps}
                           {...provided.dragHandleProps}
                         >
-                          <span className={styles.movieIndex}>{index + 1}. </span>
-                          <img src={`https://image.tmdb.org/t/p/w200${movie.poster_path}`} alt={movie.title} />
-                          <div>
+                          <span className="font-bold mr-4">{index + 1}. </span>
+                          <img src={`https://image.tmdb.org/t/p/w200${movie.poster_path}`} alt={movie.title} className="w-12 h-auto mr-4" />
+                          <div className="flex-1">
                             {movie.title} ({movie.release_date?.substring(0, 4)})
                             <p>Director: {movie.director}</p>
-                            <label>
+                            <label className="flex items-center ml-4">
                               <input
                                 type="checkbox"
                                 checked={movie.watched}
                                 onChange={() => handleToggleWatched(movie.id, movie.watched)}
+                                className="mr-2"
                               />
                               Watched
                             </label>
-                            <button onClick={() => handleRemoveMovie(movie.id)}>Remove</button>
+                            <button onClick={() => handleRemoveMovie(movie.id)} className="ml-2 btn btn-danger">Remove</button>
                           </div>
                         </li>
                       )}
