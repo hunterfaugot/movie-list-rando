@@ -21,7 +21,7 @@ const SearchMovies = ({ onAddMovie }) => {
     const director = movie.credits.crew.find((member) => member.job === 'Director');
 
     return (
-      <li key={movie.id} className="flex items-center p-4 mb-4 border border-gray-300 bg-white">
+      <li key={movie.id} className="flex items-center p-4 mb-4 rounded-xl shadow-lg bg-white text-black">
         <img
           src={`https://image.tmdb.org/t/p/w200${movie.poster_path}`}
           alt={movie.title}
@@ -45,7 +45,7 @@ const SearchMovies = ({ onAddMovie }) => {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Search for a movie"
-          className="input input-bordered"
+          className="w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-200 text-black placeholder-black"
         />
         <button type="submit" className="ml-2 btn btn-primary">Search</button>
       </form>
@@ -57,3 +57,5 @@ const SearchMovies = ({ onAddMovie }) => {
 };
 
 export default SearchMovies;
+
+

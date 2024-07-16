@@ -8,7 +8,17 @@ module.exports = {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        customBlue: '#256EFF',
+      },
+      borderRadius: {
+        'xl': '1.5rem',
+      },
+      borderWidth: {
+        '3': '3px',
+      },
+    },
   },
   plugins: [],
 };

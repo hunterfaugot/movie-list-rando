@@ -113,7 +113,7 @@ const Watchlist = () => {
 
   return (
     <Layout>
-      <div className="flex justify-between p-4 h-screen">
+      <div className="flex justify-between p-4 h-screen overflow-hidden">
         <div className="flex-1 mr-4 overflow-y-auto">
           <SearchMovies onAddMovie={handleAddMovie} />
         </div>
@@ -127,7 +127,7 @@ const Watchlist = () => {
                     <Draggable key={movie.id} draggableId={movie.id} index={index}>
                       {(provided) => (
                         <li
-                          className="flex items-center p-4 mb-4 border border-gray-300 bg-white"
+                          className="flex items-center p-4 mb-4 rounded-xl shadow-lg bg-white text-black"
                           ref={provided.innerRef}
                           {...provided.draggableProps}
                           {...provided.dragHandleProps}
