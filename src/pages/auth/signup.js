@@ -2,6 +2,7 @@
 
 "use client";
 
+import Layout from '../../components/Layout';
 import { useState } from 'react';
 import { auth } from '../../utils/firebase';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
@@ -21,7 +22,7 @@ const Signup = () => {
   };
 
   return (
-    <div>
+    <Layout>
       <h1>Signup</h1>
       <form onSubmit={handleSignup}>
         <div>
@@ -44,7 +45,7 @@ const Signup = () => {
         </div>
         <button type="submit">Signup</button>
       </form>
-    </div>
+    </Layout>
   );
 };
 

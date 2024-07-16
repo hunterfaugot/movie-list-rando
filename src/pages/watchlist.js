@@ -1,9 +1,11 @@
-// src/pages/watchlist.js
+// src/app/watchlist.js
 
+"use client";
+
+import Layout from '../components/Layout';
 import { useState, useEffect } from 'react';
 import { firestore, auth } from '../utils/firebase';
 import { collection, addDoc, getDocs, query, where } from 'firebase/firestore';
-import withAuth from '../utils/withAuth';
 
 const Watchlist = () => {
   const [movie, setMovie] = useState('');
@@ -59,9 +61,9 @@ const Watchlist = () => {
       alert('Your watchlist is empty.');
     }
   };
-  
+
   return (
-    <div>
+    <Layout>
       <h1>Watchlist</h1>
       <form onSubmit={handleAddMovie}>
         <div>
@@ -75,14 +77,14 @@ const Watchlist = () => {
         </div>
         <button type="submit">Add Movie</button>
       </form>
+      <button onClick={pickRandomMovie}>Pick a Random Movie</button>
       <ul>
         {watchlist.map((movie) => (
           <li key={movie.id}>{movie.name}</li>
         ))}
       </ul>
-    </div>
+    </Layout>
   );
-  
 };
 
-export default withAuth(Watchlist);
+export default Watchlist;

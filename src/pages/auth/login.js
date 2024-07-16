@@ -1,21 +1,15 @@
-// src/app/auth/login.js
+// src/pages/auth/login.js
 
 "use client";
 
-import { useState, useEffect } from 'react';
+import Layout from '../../components/Layout';
+import { useState } from 'react';
 import { auth } from '../../utils/firebase';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-
-  useEffect(() => {
-    console.log("Firebase API Key:", process.env.NEXT_PUBLIC_FIREBASE_API_KEY);
-    console.log("Firebase Auth Domain:", process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN);
-    console.log("Firebase Project ID:", process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID);
-    console.log("Firebase App ID:", process.env.NEXT_PUBLIC_FIREBASE_APP_ID);
-  }, []);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -28,7 +22,7 @@ const Login = () => {
   };
 
   return (
-    <div>
+    <Layout>
       <h1>Login</h1>
       <form onSubmit={handleLogin}>
         <div>
@@ -51,7 +45,7 @@ const Login = () => {
         </div>
         <button type="submit">Login</button>
       </form>
-    </div>
+    </Layout>
   );
 };
 

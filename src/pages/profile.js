@@ -2,6 +2,7 @@
 
 "use client";
 
+import Layout from '../components/Layout';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { auth } from '../utils/firebase';
@@ -33,11 +34,11 @@ const Profile = () => {
   }
 
   return (
-    <div>
+    <Layout>
       <h1>Profile</h1>
       <p>Email: {user.email}</p>
       <button onClick={handleLogout}>Logout</button>
-    </div>
+    </Layout>
   );
 };
 

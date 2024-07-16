@@ -2,14 +2,15 @@
 
 "use client";
 
+import Layout from '../components/Layout';
 import TestFirebaseConfig from '../pages/auth/TestFirebaseConfig';
 
 const HomePage = () => {
   return (
-    <div>
+    <Layout>
       <h1>Home Page</h1>
       <TestFirebaseConfig />
-    </div>
+    </Layout>
   );
 };
 
