@@ -118,7 +118,9 @@ const Watchlist = () => {
           <SearchMovies onAddMovie={handleAddMovie} />
         </div>
         <div className="flex-1 ml-4 flex flex-col overflow-y-auto">
-          <button onClick={pickRandomMovie} className="mb-4 btn btn-primary">Pick a Random Movie</button>
+          <button onClick={pickRandomMovie} className="mb-4 py-2 px-4 bg-customGreen text-white font-semibold rounded-lg shadow-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
+            Pick a Random Movie
+          </button>
           <DragDropContext onDragEnd={onDragEnd}>
             <Droppable droppableId="watchlist">
               {(provided) => (
@@ -127,7 +129,7 @@ const Watchlist = () => {
                     <Draggable key={movie.id} draggableId={movie.id} index={index}>
                       {(provided) => (
                         <li
-                          className="flex items-center p-4 mb-4 rounded-xl shadow-lg bg-white text-black"
+                          className="flex items-center p-4 mb-4 rounded-xl shadow-dark-lg bg-white text-black"
                           ref={provided.innerRef}
                           {...provided.draggableProps}
                           {...provided.dragHandleProps}
@@ -146,7 +148,9 @@ const Watchlist = () => {
                               />
                               Watched
                             </label>
-                            <button onClick={() => handleRemoveMovie(movie.id)} className="ml-2 btn btn-danger">Remove</button>
+                            <button onClick={() => handleRemoveMovie(movie.id)} className="ml-2 py-2 px-4 bg-customRed text-white font-semibold rounded-lg shadow-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2">
+                              Remove
+                            </button>
                           </div>
                         </li>
                       )}
@@ -164,3 +168,5 @@ const Watchlist = () => {
 };
 
 export default Watchlist;
+
+

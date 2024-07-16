@@ -24,6 +24,11 @@ const Layout = ({ children }) => {
               <div className="text-white cursor-pointer">Login</div>
             </Link>
           </li>
+          <li>
+            <Link href="/auth/signup" passHref>
+              <div className="text-white cursor-pointer">Signup</div>
+            </Link>
+          </li>
         </ul>
       </nav>
       <main>{children}</main>
@@ -32,3 +37,4 @@ const Layout = ({ children }) => {
 };
 
 export default Layout;
+

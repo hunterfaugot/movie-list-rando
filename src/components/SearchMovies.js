@@ -21,7 +21,7 @@ const SearchMovies = ({ onAddMovie }) => {
     const director = movie.credits.crew.find((member) => member.job === 'Director');
 
     return (
-      <li key={movie.id} className="flex items-center p-4 mb-4 rounded-xl shadow-lg bg-white text-black">
+      <li key={movie.id} className="flex items-center p-4 mb-4 rounded-xl shadow-dark-lg bg-white text-black">
         <img
           src={`https://image.tmdb.org/t/p/w200${movie.poster_path}`}
           alt={movie.title}
@@ -31,7 +31,9 @@ const SearchMovies = ({ onAddMovie }) => {
           <div className="font-bold">{movie.title}</div> ({movie.release_date?.substring(0, 4)})
           <p>{movie.overview}</p>
           <p>Director: {director ? director.name : 'N/A'}</p>
-          <button onClick={() => onAddMovie(movie)} className="ml-2 btn btn-primary">Add to Watchlist</button>
+          <button onClick={() => onAddMovie(movie)} className="ml-2 py-2 px-4 bg-customGreen text-white font-semibold rounded-lg shadow-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
+            Add to Watchlist
+          </button>
         </div>
       </li>
     );
@@ -39,15 +41,17 @@ const SearchMovies = ({ onAddMovie }) => {
 
   return (
     <div>
-      <form onSubmit={handleSearch} className="mb-4">
+      <form onSubmit={handleSearch} className="flex mb-4">
         <input
           type="text"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Search for a movie"
-          className="w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-200 text-black placeholder-black"
+          className="flex-grow px-3 py-2 border rounded-l-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-200 text-black placeholder-black"
         />
-        <button type="submit" className="ml-2 btn btn-primary">Search</button>
+        <button type="submit" className="ml-2 py-2 px-4 bg-customGreen text-white font-semibold rounded-r-lg shadow-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
+          Search
+        </button>
       </form>
       <ul className="list-none p-0">
         {results.map((movie) => renderMovieDetails(movie))}
@@ -57,5 +61,6 @@ const SearchMovies = ({ onAddMovie }) => {
 };
 
 export default SearchMovies;
+
 
 
