@@ -4,6 +4,7 @@
 
 import { useState } from 'react';
 import { searchMovies } from '../utils/tmdb';
+import styles from '../styles/SearchMovies.module.css';
 
 const SearchMovies = ({ onAddMovie }) => {
   const [query, setQuery] = useState('');
@@ -17,6 +18,25 @@ const SearchMovies = ({ onAddMovie }) => {
     }
   };
 
+  const renderMovieDetails = (movie) => {
+    const director = movie.credits.crew.find((member) => member.job === 'Director');
+
+    return (
+      <div key={movie.id} className={styles.movieDetails}>
+        <h3 className={styles.movieTitle}>{movie.title}</h3>
+        <p>{movie.overview}</p>
+        <p>Release Date: {movie.release_date}</p>
+        <p>Director: {director ? director.name : 'N/A'}</p>
+        <img
+          src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+          alt={movie.title}
+          className={styles.moviePoster}
+        />
+        <button onClick={() => onAddMovie(movie)}>Add to Watchlist</button>
+      </div>
+    );
+  };
+
   return (
     <div>
       <form onSubmit={handleSearch}>
@@ -28,14 +48,9 @@ const SearchMovies = ({ onAddMovie }) => {
         />
         <button type="submit">Search</button>
       </form>
-      <ul>
-        {results.map((movie) => (
-          <li key={movie.id}>
-            {movie.title} ({movie.release_date?.substring(0, 4)})
-            <button onClick={() => onAddMovie(movie)}>Add</button>
-          </li>
-        ))}
-      </ul>
+      <div>
+        {results.map((movie) => renderMovieDetails(movie))}
+      </div>
     </div>
   );
 };

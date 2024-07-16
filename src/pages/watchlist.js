@@ -7,6 +7,7 @@ import SearchMovies from '../components/SearchMovies';
 import { useState, useEffect } from 'react';
 import { firestore, auth } from '../utils/firebase';
 import { collection, addDoc, getDocs, query, where, deleteDoc, doc } from 'firebase/firestore';
+import styles from '../styles/Watchlist.module.css';
 
 const Watchlist = () => {
   const [watchlist, setWatchlist] = useState([]);
@@ -46,6 +47,8 @@ const Watchlist = () => {
         title: movie.title,
         release_date: movie.release_date,
         tmdb_id: movie.id,
+        poster_path: movie.poster_path,
+        director: movie.credits.crew.find((member) => member.job === 'Director')?.name,
       });
       fetchWatchlist(user.uid);
     } catch (error) {
@@ -75,17 +78,26 @@ const Watchlist = () => {
 
   return (
     <Layout>
-      <h1>Watchlist</h1>
-      <SearchMovies onAddMovie={handleAddMovie} />
-      <button onClick={pickRandomMovie}>Pick a Random Movie</button>
-      <ul>
-        {watchlist.map((movie) => (
-          <li key={movie.id}>
-            {movie.title} ({movie.release_date?.substring(0, 4)})
-            <button onClick={() => handleRemoveMovie(movie.id)}>Remove</button>
-          </li>
-        ))}
-      </ul>
+      <div className={styles.container}>
+        <div className={styles.searchColumn}>
+          <SearchMovies onAddMovie={handleAddMovie} />
+        </div>
+        <div className={styles.watchlistColumn}>
+          <button onClick={pickRandomMovie} className={styles.randomButton}>Pick a Random Movie</button>
+          <ul className={styles.watchlist}>
+            {watchlist.map((movie) => (
+              <li key={movie.id} className={styles.watchlistItem}>
+                <img src={`https://image.tmdb.org/t/p/w200${movie.poster_path}`} alt={movie.title} />
+                <div>
+                  {movie.title} ({movie.release_date?.substring(0, 4)})
+                  <p>Director: {movie.director}</p>
+                  <button onClick={() => handleRemoveMovie(movie.id)}>Remove</button>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
     </Layout>
   );
 };

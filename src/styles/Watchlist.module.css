@@ -1,0 +1,41 @@
+/* src/styles/Watchlist.module.css */
+
+.container {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px;
+}
+
+.searchColumn {
+  flex: 1;
+  margin-right: 20px;
+}
+
+.watchlistColumn {
+  flex: 1;
+  margin-left: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.watchlist {
+  list-style-type: none;
+  padding: 0;
+}
+
+.watchlistItem {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.watchlistItem img {
+  width: 50px;
+  height: auto;
+  margin-right: 10px;
+}
+
+.randomButton {
+  margin-bottom: 20px;
+  align-self: flex-start;
+}
