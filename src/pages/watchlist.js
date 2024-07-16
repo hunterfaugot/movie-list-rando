@@ -6,7 +6,7 @@ import Layout from '../components/Layout';
 import SearchMovies from '../components/SearchMovies';
 import { useState, useEffect } from 'react';
 import { firestore, auth } from '../utils/firebase';
-import { collection, addDoc, getDocs, query, where, deleteDoc, doc, orderBy, writeBatch } from 'firebase/firestore';
+import { collection, addDoc, getDocs, query, where, deleteDoc, doc, orderBy, writeBatch, updateDoc } from 'firebase/firestore';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import styles from '../styles/Watchlist.module.css';
 
@@ -52,6 +52,7 @@ const Watchlist = () => {
         poster_path: movie.poster_path,
         director: movie.credits.crew.find((member) => member.job === 'Director')?.name,
         order: order,
+        watched: false, // Default to not watched
       });
       fetchWatchlist(user.uid);
     } catch (error) {
@@ -67,6 +68,15 @@ const Watchlist = () => {
       fetchWatchlist(user.uid);
     } catch (error) {
       alert('Error removing movie: ' + error.message);
+    }
+  };
+
+  const handleToggleWatched = async (movieId, watched) => {
+    try {
+      await updateDoc(doc(firestore, 'watchlist', movieId), { watched: !watched });
+      fetchWatchlist(user.uid);
+    } catch (error) {
+      alert('Error updating movie: ' + error.message);
     }
   };
 
@@ -128,6 +138,14 @@ const Watchlist = () => {
                           <div>
                             {movie.title} ({movie.release_date?.substring(0, 4)})
                             <p>Director: {movie.director}</p>
+                            <label>
+                              <input
+                                type="checkbox"
+                                checked={movie.watched}
+                                onChange={() => handleToggleWatched(movie.id, movie.watched)}
+                              />
+                              Watched
+                            </label>
                             <button onClick={() => handleRemoveMovie(movie.id)}>Remove</button>
                           </div>
                         </li>

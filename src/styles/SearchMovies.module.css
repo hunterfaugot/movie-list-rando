@@ -1,18 +1,33 @@
 /* src/styles/SearchMovies.module.css */
 
-.moviePoster {
-  width: 150px; /* Adjust width as needed */
-  height: auto; /* Maintain aspect ratio */
-  margin: 10px 0; /* Optional: Add some margin */
+.searchResults {
+  list-style-type: none;
+  padding: 0;
+}
+
+.searchItem {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  border: 1px solid #ddd;
+  padding: 10px;
+  background-color: #fff;
+}
+
+.searchItem img {
+  width: 50px; /* Adjust as needed */
+  height: auto;
+  margin-right: 10px;
 }
 
 .movieDetails {
-  border: 1px solid #ddd;
-  padding: 10px;
-  margin-bottom: 10px;
+  flex: 1;
 }
 
 .movieTitle {
-  font-size: 1.2em;
-  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.addButton {
+  margin-left: 10px;
 }

@@ -50,3 +50,13 @@
   font-weight: bold;
   margin-right: 10px;
 }
+
+.watchedLabel {
+  display: flex;
+  align-items: center;
+  margin-left: 10px;
+}
+
+.watchedLabel input {
+  margin-right: 5px;
+}
