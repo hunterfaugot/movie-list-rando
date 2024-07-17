@@ -120,10 +120,11 @@ const Watchlist = () => {
       alert('Please enter a list name.');
       return;
     }
-
+  
     try {
       const listData = {
         uid: user.uid,
+        username: user.displayName || "Anonymous", // Assuming user object has a displayName field
         name: listName,
         movies: watchlist.map((movie, index) => ({
           id: movie.id,
@@ -134,9 +135,10 @@ const Watchlist = () => {
           director: movie.director,
           watched: movie.watched,
           order: index // Save the order
-        }))
+        })),
+        createdAt: new Date() // Add timestamp
       };
-
+  
       await addDoc(collection(firestore, 'user_lists'), listData);
       alert('List saved successfully!');
       setHasUnsavedChanges(false); // Reset unsaved changes
@@ -144,6 +146,7 @@ const Watchlist = () => {
       alert('Error saving list: ' + error.message);
     }
   };
+  
 
   const updateList = async () => {
     if (!user || !listId) return;
