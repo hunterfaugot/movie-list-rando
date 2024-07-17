@@ -3,7 +3,7 @@
 import Layout from '../components/Layout';
 import SearchMovies from '../components/SearchMovies';
 import MovieWatchProviders from '../components/MovieWatchProviders';
-import Modal from '../components/modal';
+import Modal from '../components/Modal';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { firestore, auth } from '../utils/firebase';

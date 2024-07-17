@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import Modal from '../components/modal'; // Ensure the path is correct
+import Modal from '../components/Modal'; // Ensure the path is correct
 import { firestore, auth } from '../utils/firebase';
 import { collection, getDocs, query, where, deleteDoc, doc } from 'firebase/firestore';
 import Layout from '../components/Layout';
