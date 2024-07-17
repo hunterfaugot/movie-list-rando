@@ -20,6 +20,11 @@ const Layout = ({ children }) => {
             </Link>
           </li>
           <li>
+            <Link href="/my-lists" passHref>
+              <div className="text-white cursor-pointer">My Lists</div>
+            </Link>
+          </li>
+          <li>
             <Link href="/auth/login" passHref>
               <div className="text-white cursor-pointer">Login</div>
             </Link>

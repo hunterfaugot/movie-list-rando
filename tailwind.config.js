@@ -13,6 +13,7 @@ module.exports = {
         customGreen: '#3ddc97',
         customBlue: '#256EFF',
         customRed: '#ff495c',
+        customPurple: '#46237a',
       },
       borderRadius: {
         'xl': '1.5rem',
@@ -21,7 +22,7 @@ module.exports = {
         '3': '3px',
       },
       boxShadow: {
-        'dark-lg': '0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.5)', // Custom dark shadow
+        'dark-lg': '0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.5)',
       },
     },
   },
