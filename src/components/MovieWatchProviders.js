@@ -59,7 +59,7 @@ const MovieWatchProviders = ({ movieId }) => {
 
   return (
     <div>
-      <h3>Streaming</h3>
+      <br></br>
       {providers.length > 0 ? (
         <ul className="flex space-x-4">
           {providers.map((provider) => (
