@@ -15,7 +15,6 @@ html, body {
   color: #fff; /* Set text color to white for contrast */
 }
 
-/* Ensure the root element takes full height */
 #root, .app-container {
   height: 100%;
 }
@@ -55,15 +54,15 @@ html {
   scrollbar-width: none; /* Firefox */
 }
 
-nav {
-  background-color: #333;
-  padding: 10px;
+.navbar {
+  background-color: black; /* Change this to your desired background color */
+  padding: 16px;
 }
 
 nav ul {
   list-style: none;
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   margin: 0;
   padding: 0;
 }
