@@ -39,8 +39,10 @@ const Watchlist = () => {
       querySnapshot.forEach((doc) => {
         movies.push({ id: doc.id, ...doc.data() });
       });
+      console.log('Fetched watchlist:', movies);
       setWatchlist(movies);
     } catch (error) {
+      console.error('Error fetching watchlist:', error.message);
       alert('Error fetching watchlist: ' + error.message);
     }
   };
@@ -54,12 +56,15 @@ const Watchlist = () => {
         setListName(listData.name);
         setWatchlist(listData.movies.map((movie) => ({
           ...movie,
-          id: movie.id ? movie.id.toString() : 'no-id'
+          id: movie.id ? movie.id.toString() : 'no-id',
+          watched: movie.watched !== undefined ? movie.watched : false, // Ensure watched status is set correctly
         })));
+        console.log('Fetched list:', listData.movies);
       } else {
         alert('List not found.');
       }
     } catch (error) {
+      console.error('Error fetching list:', error.message);
       alert('Error fetching list: ' + error.message);
     }
   };
@@ -81,6 +86,7 @@ const Watchlist = () => {
       });
       fetchWatchlist(user.uid);
     } catch (error) {
+      console.error('Error adding movie:', error.message);
       alert('Error adding movie: ' + error.message);
     }
   };
@@ -92,6 +98,7 @@ const Watchlist = () => {
       await deleteDoc(doc(firestore, 'watchlist', movieId));
       fetchWatchlist(user.uid);
     } catch (error) {
+      console.error('Error removing movie:', error.message);
       alert('Error removing movie: ' + error.message);
     }
   };
@@ -101,6 +108,7 @@ const Watchlist = () => {
       await updateDoc(doc(firestore, 'watchlist', movieId), { watched: !watched });
       fetchWatchlist(user.uid);
     } catch (error) {
+      console.error('Error updating movie:', error.message);
       alert('Error updating movie: ' + error.message);
     }
   };
@@ -129,6 +137,7 @@ const Watchlist = () => {
       await addDoc(collection(firestore, 'user_lists'), listData);
       alert('List saved successfully!');
     } catch (error) {
+      console.error('Error saving list:', error.message);
       alert('Error saving list: ' + error.message);
     }
   };
@@ -164,7 +173,22 @@ const Watchlist = () => {
     try {
       await batch.commit();
     } catch (error) {
-      console.error('Error updating order in Firestore:', error);
+      console.error('Error updating order in Firestore:', error.message);
+    }
+  };
+
+  const clearList = async () => {
+    if (!user) return;
+
+    try {
+      for (const movie of watchlist) {
+        await deleteDoc(doc(firestore, 'watchlist', movie.id));
+      }
+      setWatchlist([]);
+      alert('List cleared successfully!');
+    } catch (error) {
+      console.error('Error clearing list:', error.message);
+      alert('Error clearing list: ' + error.message);
     }
   };
 
@@ -188,6 +212,9 @@ const Watchlist = () => {
             />
             <button onClick={saveList} className="ml-2 py-2 px-4 bg-customGreen text-white font-semibold rounded-lg shadow-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
               Save List
+            </button>
+            <button onClick={clearList} className="ml-2 py-2 px-4 bg-customRed text-white font-semibold rounded-lg shadow-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2">
+              Clear List
             </button>
           </div>
           <DragDropContext onDragEnd={onDragEnd}>
@@ -239,3 +266,4 @@ const Watchlist = () => {
 };
 
 export default Watchlist;
+

@@ -3,12 +3,14 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { firestore } from '../utils/firebase';
-import { collection, getDocs, query, orderBy, limit } from 'firebase/firestore';
+import { firestore, auth } from '../utils/firebase';
+import { collection, getDocs, query, orderBy, limit, addDoc } from 'firebase/firestore';
+import { useAuthState } from 'react-firebase-hooks/auth';
 import Layout from '../components/Layout';
 
 const HomePage = () => {
   const [recentLists, setRecentLists] = useState([]);
+  const [user] = useAuthState(auth);
 
   useEffect(() => {
     const fetchRecentLists = async () => {
@@ -28,6 +30,26 @@ const HomePage = () => {
     fetchRecentLists();
   }, []);
 
+  const handleAddToMyLists = async (list) => {
+    if (!user) return;
+
+    try {
+      const newList = {
+        uid: user.uid,
+        name: list.name,
+        movies: list.movies,
+        createdAt: new Date(),
+        username: user.displayName || user.email.split('@')[0] // Assuming you have a displayName or use email prefix as username
+      };
+
+      await addDoc(collection(firestore, 'user_lists'), newList);
+      alert('List added to your lists successfully!');
+    } catch (error) {
+      console.error('Error adding list: ', error);
+      alert('Error adding list: ' + error.message);
+    }
+  };
+
   return (
     <Layout>
       <div className="p-4">
@@ -43,9 +65,14 @@ const HomePage = () => {
                   ))}
                 </div>
               </div>
-              <button className="bg-customGreen text-white font-semibold py-2 px-4 rounded-xl hover:bg-green-600 focus:outline-none">
-                Add to My Lists
-              </button>
+              {user && user.uid !== list.uid && (
+                <button
+                  className="bg-customGreen text-white font-semibold py-2 px-4 rounded-xl hover:bg-green-600 focus:outline-none"
+                  onClick={() => handleAddToMyLists(list)}
+                >
+                  Add to My Lists
+                </button>
+              )}
             </li>
           ))}
         </ul>

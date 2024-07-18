@@ -1,6 +1,8 @@
+"use client";
+
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import Modal from '../components/Modal'; // Ensure the path is correct
+import Modal from '../components/Modal';
 import { firestore, auth } from '../utils/firebase';
 import { collection, getDocs, query, where, deleteDoc, doc } from 'firebase/firestore';
 import Layout from '../components/Layout';
@@ -37,10 +39,10 @@ const MyLists = () => {
     }
   };
 
-  const handleEditList = (listId) => {
+  const handleEdit = (list) => {
     router.push({
       pathname: '/watchlist',
-      query: { listId: listId }
+      query: { listId: list.id }
     });
   };
 
@@ -78,7 +80,7 @@ const MyLists = () => {
                   ))}
                 </div>
               </div>
-              <button onClick={() => handleEditList(list.id)} className="ml-2 py-2 px-4 bg-customGreen text-white font-semibold rounded-lg shadow-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
+              <button onClick={() => handleEdit(list)} className="ml-2 py-2 px-4 bg-customGreen text-white font-semibold rounded-lg shadow-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
                 Edit
               </button>
               <button onClick={() => handleDeleteList(list.id)} className="ml-2 py-2 px-4 bg-customRed text-white font-semibold rounded-lg shadow-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2">
