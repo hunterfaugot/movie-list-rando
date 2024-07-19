@@ -1,3 +1,5 @@
+// src/pages/my-lists.js
+
 "use client";
 
 import { useState, useEffect } from 'react';
@@ -5,25 +7,21 @@ import { useRouter } from 'next/router';
 import Modal from '../components/Modal';
 import { firestore, auth } from '../utils/firebase';
 import { collection, getDocs, query, where, deleteDoc, doc } from 'firebase/firestore';
+import { useAuthState } from 'react-firebase-hooks/auth';
 import Layout from '../components/Layout';
 
 const MyLists = () => {
   const [lists, setLists] = useState([]);
-  const [user, setUser] = useState(null);
+  const [user] = useAuthState(auth);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [listToDelete, setListToDelete] = useState(null);
   const router = useRouter();
 
   useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged((user) => {
-      if (user) {
-        setUser(user);
-        fetchUserLists(user.uid);
-      }
-    });
-
-    return () => unsubscribe();
-  }, []);
+    if (user) {
+      fetchUserLists(user.uid);
+    }
+  }, [user]);
 
   const fetchUserLists = async (uid) => {
     try {
@@ -39,10 +37,10 @@ const MyLists = () => {
     }
   };
 
-  const handleEdit = (list) => {
+  const handleEditList = (listId) => {
     router.push({
       pathname: '/watchlist',
-      query: { listId: list.id }
+      query: { listId }
     });
   };
 
@@ -80,7 +78,7 @@ const MyLists = () => {
                   ))}
                 </div>
               </div>
-              <button onClick={() => handleEdit(list)} className="ml-2 py-2 px-4 bg-customGreen text-white font-semibold rounded-lg shadow-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
+              <button onClick={() => handleEditList(list.id)} className="ml-2 py-2 px-4 bg-customGreen text-white font-semibold rounded-lg shadow-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
                 Edit
               </button>
               <button onClick={() => handleDeleteList(list.id)} className="ml-2 py-2 px-4 bg-customRed text-white font-semibold rounded-lg shadow-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2">

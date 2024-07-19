@@ -131,7 +131,8 @@ const Watchlist = () => {
           poster_path: movie.poster_path,
           director: movie.director,
           watched: movie.watched
-        }))
+        })),
+        createdAt: new Date() // Ensure the createdAt field is set
       };
 
       await addDoc(collection(firestore, 'user_lists'), listData);
@@ -230,7 +231,7 @@ const Watchlist = () => {
                           {...provided.draggableProps}
                           {...provided.dragHandleProps}
                         >
-                          <button onClick={() => handleRemoveMovie(movie.id)} className="absolute top-2 right-2 py-2 px-4 bg-customRed text-white font-semibold rounded-xl shadow-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2">
+                                                    <button onClick={() => handleRemoveMovie(movie.id)} className="absolute top-2 right-2 py-2 px-4 bg-customRed text-white font-semibold rounded-xl shadow-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2">
                             Remove
                           </button>
                           <div className="flex items-center">

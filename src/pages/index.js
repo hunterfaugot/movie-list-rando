@@ -1,5 +1,3 @@
-// src/pages/index.js
-
 "use client";
 
 import { useState, useEffect } from 'react';
@@ -58,7 +56,7 @@ const HomePage = () => {
           {recentLists.map((list) => (
             <li key={list.id} className="flex items-center p-4 mb-4 rounded-xl shadow-dark-lg bg-white text-black">
               <div className="flex-1">
-                <h2 className="text-lg font-semibold">{list.name} <span className="text-sm text-gray-500">by {list.username}</span></h2>
+                <h2 className="text-lg font-semibold">{list.name} <span className="text-sm text-gray-500">by {user && user.uid === list.uid ? 'You' : list.username}</span></h2>
                 <div className="flex flex-wrap">
                   {list.movies.slice(0, 5).map((movie) => (
                     <img key={movie.id} src={`https://image.tmdb.org/t/p/w200${movie.poster_path}`} alt={movie.title} className="w-12 h-auto mr-2 mb-2" />
