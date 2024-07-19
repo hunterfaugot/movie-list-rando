@@ -3,6 +3,8 @@
 import Layout from '../components/Layout';
 import SearchMovies from '../components/SearchMovies';
 import MovieWatchProviders from '../components/MovieWatchProviders';
+import MovieDetailModal from '../components/MovieDetailModal';
+import StarRating from '../components/StarRating';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { firestore, auth } from '../utils/firebase';
@@ -13,6 +15,7 @@ const Watchlist = () => {
   const [watchlist, setWatchlist] = useState([]);
   const [user, setUser] = useState(null);
   const [listName, setListName] = useState('');
+  const [selectedMovie, setSelectedMovie] = useState(null);
   const router = useRouter();
   const { listId } = router.query;
 
@@ -58,6 +61,7 @@ const Watchlist = () => {
           ...movie,
           id: movie.id ? movie.id.toString() : 'no-id',
           watched: movie.watched !== undefined ? movie.watched : false, // Ensure watched status is set correctly
+          rating: movie.rating !== undefined ? movie.rating : 0, // Ensure rating is set correctly
         })));
         console.log('Fetched list:', listData.movies);
       } else {
@@ -67,7 +71,7 @@ const Watchlist = () => {
       console.error('Error fetching list:', error.message);
       alert('Error fetching list: ' + error.message);
     }
-  };
+  };  
 
   const handleAddMovie = async (movie) => {
     if (!user) return;
@@ -82,7 +86,8 @@ const Watchlist = () => {
         poster_path: movie.poster_path,
         director: movie.credits.crew.find((member) => member.job === 'Director')?.name,
         order: order,
-        watched: false
+        watched: false,
+        rating: 0
       });
       fetchWatchlist(user.uid);
     } catch (error) {
@@ -113,12 +118,22 @@ const Watchlist = () => {
     }
   };
 
+  const handleRatingChange = async (movieId, rating) => {
+    try {
+      await updateDoc(doc(firestore, 'watchlist', movieId), { rating });
+      fetchWatchlist(user.uid);
+    } catch (error) {
+      console.error('Error updating rating:', error.message);
+      alert('Error updating rating: ' + error.message);
+    }
+  };
+
   const saveList = async () => {
     if (!user || !listName.trim()) {
       alert('Please enter a list name.');
       return;
     }
-
+  
     try {
       const listData = {
         uid: user.uid,
@@ -130,23 +145,24 @@ const Watchlist = () => {
           tmdb_id: movie.tmdb_id,
           poster_path: movie.poster_path,
           director: movie.director,
-          watched: movie.watched
+          watched: movie.watched,
+          rating: movie.rating // Ensure rating is saved
         })),
         createdAt: new Date() // Ensure the createdAt field is set
       };
-
+  
       await addDoc(collection(firestore, 'user_lists'), listData);
       alert('List saved successfully!');
     } catch (error) {
       console.error('Error saving list:', error.message);
       alert('Error saving list: ' + error.message);
     }
-  };
+  };  
 
   const pickRandomMovie = () => {
     if (watchlist.length > 0) {
       const randomIndex = Math.floor(Math.random() * watchlist.length);
-      alert(`You should watch: ${watchlist[randomIndex].title}`);
+      setSelectedMovie(watchlist[randomIndex]);
     } else {
       alert('Your watchlist is empty.');
     }
@@ -231,23 +247,31 @@ const Watchlist = () => {
                           {...provided.draggableProps}
                           {...provided.dragHandleProps}
                         >
-                                                    <button onClick={() => handleRemoveMovie(movie.id)} className="absolute top-2 right-2 py-2 px-4 bg-customRed text-white font-semibold rounded-xl shadow-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2">
+                          <button onClick={() => handleRemoveMovie(movie.id)} className="absolute top-2 right-2 py-2 px-4 bg-customRed text-white font-semibold rounded-xl shadow-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2">
                             Remove
                           </button>
-                          <div className="flex items-center">
+                          <div className="flex items-center mb-2">
                             <span className="font-bold mr-4">{index + 1}. </span>
                             <img src={`https://image.tmdb.org/t/p/w200${movie.poster_path}`} alt={movie.title} className="w-16 h-auto mr-4" />
                             <div className="flex-1">
                               <span className="font-bold">{movie.title}</span> ({movie.release_date?.substring(0, 4)})
                               <p>Director: {movie.director}</p>
-                              <button
-                                onClick={() => handleToggleWatched(movie.id, movie.watched)}
-                                className={`ml-4 py-2 px-4 rounded-xl shadow-md focus:outline-none focus:ring-2 focus:ring-green-500 ${
-                                  movie.watched ? 'border border-customGreen bg-customGreen text-white' : 'border border-customGreen bg-white text-black'
-                                }`}
-                              >
-                                {movie.watched ? 'Watched' : 'Not Watched'}
-                              </button>
+                              <div className="flex items-center mt-2">
+                                <button
+                                  onClick={() => handleToggleWatched(movie.id, movie.watched)}
+                                  className={`ml-4 py-2 px-4 rounded-xl shadow-md focus:outline-none focus:ring-2 focus:ring-green-500 ${
+                                    movie.watched ? 'border border-customGreen bg-customGreen text-white' : 'border border-customGreen bg-white text-black'
+                                  }`}
+                                >
+                                  {movie.watched ? 'Watched' : 'Not Watched'}
+                                </button>
+                                <div className="ml-4">
+                                  <StarRating
+                                    rating={movie.rating}
+                                    onRatingChange={(newRating) => handleRatingChange(movie.id, newRating)}
+                                  />
+                                </div>
+                              </div>
                             </div>
                           </div>
                           <MovieWatchProviders movieId={movie.tmdb_id} />
@@ -262,6 +286,13 @@ const Watchlist = () => {
           </DragDropContext>
         </div>
       </div>
+      {selectedMovie && (
+        <MovieDetailModal
+          show={!!selectedMovie}
+          movie={selectedMovie}
+          onClose={() => setSelectedMovie(null)}
+        />
+      )}
     </Layout>
   );
 };

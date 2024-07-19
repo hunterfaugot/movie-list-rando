@@ -64,7 +64,7 @@ const MovieWatchProviders = ({ movieId }) => {
         <ul className="flex space-x-4">
           {providers.map((provider) => (
             <li key={provider.provider_id} className="flex flex-col items-center">
-              <img src={`https://image.tmdb.org/t/p/w45${provider.logo_path}`} alt={provider.provider_name} className="w-12 h-12" />
+              <img src={`https://image.tmdb.org/t/p/w45${provider.logo_path}`} alt={provider.provider_name} className="w-10 h-10" />
               
             </li>
           ))}
