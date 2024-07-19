@@ -79,3 +79,24 @@ nav ul {
   z-index: 10; /* Optional: To ensure it stays on top */
   padding: 1rem; /* Ensure consistent spacing */
 }
+
+.flex-wrap {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.gap-2 {
+  gap: 0.5rem;
+}
+
+.w-12 {
+  width: 3rem;
+}
+
+.h-auto {
+  height: auto;
+}
+
+.mb-2 {
+  margin-bottom: 0.5rem;
+}

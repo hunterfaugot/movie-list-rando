@@ -1,5 +1,3 @@
-// src/pages/my-lists.js
-
 "use client";
 
 import { useState, useEffect } from 'react';
@@ -13,8 +11,6 @@ import Layout from '../components/Layout';
 const MyLists = () => {
   const [lists, setLists] = useState([]);
   const [user] = useAuthState(auth);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [listToDelete, setListToDelete] = useState(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -37,12 +33,15 @@ const MyLists = () => {
     }
   };
 
-  const handleEditList = (listId) => {
+  const handleEdit = (list) => {
     router.push({
       pathname: '/watchlist',
-      query: { listId }
+      query: { listId: list.id }
     });
   };
+
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [listToDelete, setListToDelete] = useState(null);
 
   const handleDeleteList = (listId) => {
     setListToDelete(listId);
@@ -72,13 +71,13 @@ const MyLists = () => {
             <li key={list.id} className="flex items-center p-4 mb-4 rounded-xl shadow-dark-lg bg-white text-black">
               <div className="flex-1">
                 <h2 className="text-lg font-semibold">{list.name}</h2>
-                <div className="flex flex-wrap">
-                  {list.movies.slice(0, 5).map((movie) => (
-                    <img key={movie.id} src={`https://image.tmdb.org/t/p/w200${movie.poster_path}`} alt={movie.title} className="w-12 h-auto mr-2 mb-2" />
+                <div className="flex flex-wrap gap-2">
+                  {list.movies.map((movie) => (
+                    <img key={movie.id} src={`https://image.tmdb.org/t/p/w200${movie.poster_path}`} alt={movie.title} className="w-12 h-auto mb-2" />
                   ))}
                 </div>
               </div>
-              <button onClick={() => handleEditList(list.id)} className="ml-2 py-2 px-4 bg-customGreen text-white font-semibold rounded-lg shadow-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
+              <button onClick={() => handleEdit(list)} className="ml-2 py-2 px-4 bg-customGreen text-white font-semibold rounded-lg shadow-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
                 Edit
               </button>
               <button onClick={() => handleDeleteList(list.id)} className="ml-2 py-2 px-4 bg-customRed text-white font-semibold rounded-lg shadow-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2">
