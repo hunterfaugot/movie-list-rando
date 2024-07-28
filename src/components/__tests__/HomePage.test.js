@@ -1,30 +1,32 @@
-import React from 'react'; // Ensure React is imported
+import React from 'react';
 import { render, screen } from '@testing-library/react';
-import '@testing-library/jest-dom';
 import HomePage from '../../pages/index';
-import { useAuthState } from 'react-firebase-hooks/auth';
+import { getDocs } from 'firebase/firestore';
 
-jest.mock('../../utils/firebase', () => {
-  return {
-    auth: {
-      onAuthStateChanged: jest.fn(),
-    },
-    db: {},
-  };
-});
-
-jest.mock('react-firebase-hooks/auth', () => ({
-  useAuthState: jest.fn(),
+jest.mock('firebase/firestore', () => ({
+  collection: jest.fn(),
+  getDocs: jest.fn(),
+  query: jest.fn(),
+  orderBy: jest.fn(),
+  addDoc: jest.fn(),
 }));
 
-describe('HomePage', () => {
-  beforeEach(() => {
-    useAuthState.mockReturnValue([null, false]);
-  });
+// Mock data for getDocs
+const mockQuerySnapshot = {
+  forEach: (callback) => {
+    const docs = [
+      { id: '1', data: () => ({ name: 'List 1', movies: [], createdAt: new Date(), username: 'user1', uid: '123' }) },
+      { id: '2', data: () => ({ name: 'List 2', movies: [], createdAt: new Date(), username: 'user2', uid: '456' }) },
+    ];
+    docs.forEach(doc => callback(doc));
+  },
+};
 
-  test('renders Home link', () => {
-    render(<HomePage />);
-    const linkElement = screen.getByText(/Home/i);
-    expect(linkElement).toBeInTheDocument();
-  });
+// Update getDocs to return the mock data
+getDocs.mockResolvedValue(mockQuerySnapshot);
+
+test('renders Recently Created Watchlists heading', () => {
+  render(<HomePage />);
+  const headingElement = screen.getByText(/Recently Created Watchlists/i);
+  expect(headingElement).toBeInTheDocument();
 });

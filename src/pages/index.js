@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { firestore, auth } from '../utils/firebase';
 import { collection, getDocs, query, orderBy, addDoc } from 'firebase/firestore';
 import { useAuthState } from 'react-firebase-hooks/auth';

@@ -1,30 +1,25 @@
 // jest.setup.js
 
-// Import custom matchers from jest-dom
 import '@testing-library/jest-dom';
 
 // Mock Firebase functions
 jest.mock('firebase/app', () => {
-    const originalModule = jest.requireActual('firebase/app');
     return {
-        ...originalModule,
-        initializeApp: jest.fn(() => {
-            console.log('Mock initializeApp called');
-        }),
+        initializeApp: jest.fn(),
     };
 });
 
 jest.mock('firebase/auth', () => {
-    const originalModule = jest.requireActual('firebase/auth');
     return {
-        ...originalModule,
         getAuth: jest.fn(() => {
-            console.log('Mock getAuth called');
             return {
                 onAuthStateChanged: jest.fn((callback) => {
-                    console.log('Mock onAuthStateChanged called');
                     callback(null); // Simulate a null user to test unauthenticated state
                 }),
+                currentUser: {
+                    uid: '123',
+                    email: 'test@example.com',
+                },
             };
         }),
         signInWithEmailAndPassword: jest.fn(),
@@ -33,13 +28,13 @@ jest.mock('firebase/auth', () => {
 });
 
 jest.mock('firebase/firestore', () => {
-    const originalModule = jest.requireActual('firebase/firestore');
     return {
-        ...originalModule,
-        getFirestore: jest.fn(() => {
-            console.log('Mock getFirestore called');
-            return {};
-        }),
+        getFirestore: jest.fn(() => ({})),
+        collection: jest.fn(),
+        getDocs: jest.fn(),
+        query: jest.fn(),
+        orderBy: jest.fn(),
+        addDoc: jest.fn(),
     };
 });
 

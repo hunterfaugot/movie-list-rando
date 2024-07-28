@@ -1,11 +1,11 @@
 "use client";
 
+import React, { useState, useEffect } from 'react';
 import Layout from '../components/Layout';
 import SearchMovies from '../components/SearchMovies';
 import MovieWatchProviders from '../components/MovieWatchProviders';
 import MovieDetailModal from '../components/MovieDetailModal';
 import StarRating from '../components/StarRating';
-import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { firestore, auth } from '../utils/firebase';
 import { collection, addDoc, getDoc, getDocs, query, where, deleteDoc, doc, orderBy, writeBatch, updateDoc } from 'firebase/firestore';
@@ -31,7 +31,11 @@ const Watchlist = () => {
       }
     });
 
-    return () => unsubscribe();
+    return () => {
+      if (typeof unsubscribe === 'function') {
+        unsubscribe();
+      }
+    };
   }, [listId]);
 
   const fetchWatchlist = async (uid) => {
@@ -60,8 +64,8 @@ const Watchlist = () => {
         setWatchlist(listData.movies.map((movie) => ({
           ...movie,
           id: movie.id ? movie.id.toString() : 'no-id',
-          watched: movie.watched !== undefined ? movie.watched : false, // Ensure watched status is set correctly
-          rating: movie.rating !== undefined ? movie.rating : 0, // Ensure rating is set correctly
+          watched: movie.watched !== undefined ? movie.watched : false,
+          rating: movie.rating !== undefined ? movie.rating : 0,
         })));
         console.log('Fetched list:', listData.movies);
       } else {
@@ -71,7 +75,7 @@ const Watchlist = () => {
       console.error('Error fetching list:', error.message);
       alert('Error fetching list: ' + error.message);
     }
-  };  
+  };
 
   const handleAddMovie = async (movie) => {
     if (!user) return;
@@ -146,9 +150,9 @@ const Watchlist = () => {
           poster_path: movie.poster_path,
           director: movie.director,
           watched: movie.watched,
-          rating: movie.rating // Ensure rating is saved
+          rating: movie.rating
         })),
-        createdAt: new Date() // Ensure the createdAt field is set
+        createdAt: new Date()
       };
   
       await addDoc(collection(firestore, 'user_lists'), listData);
@@ -157,7 +161,7 @@ const Watchlist = () => {
       console.error('Error saving list:', error.message);
       alert('Error saving list: ' + error.message);
     }
-  };  
+  };
 
   const pickRandomMovie = () => {
     if (watchlist.length > 0) {
@@ -298,4 +302,3 @@ const Watchlist = () => {
 };
 
 export default Watchlist;
-

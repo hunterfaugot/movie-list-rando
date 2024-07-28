@@ -1,10 +1,8 @@
-// src/components/__tests__/Navbar.test.js
+// src/__mocks__/firebaseMock.js
 
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import Navbar from '../Navbar'; // Ensure this path is correct and matches the casing
-import { initializeApp } from 'firebase/app';
-import { getAuth } from 'firebase/auth';
+import Navbar from '../components/Navbar'; // Ensure this path is correct
 
 // Mock Firebase configuration and initialization
 jest.mock('firebase/app', () => ({
@@ -19,16 +17,30 @@ jest.mock('firebase/auth', () => ({
       uid: '123',
       email: 'test@example.com',
     },
+    onAuthStateChanged: jest.fn((callback) => {
+      callback({
+        uid: '123',
+        email: 'test@example.com',
+      });
+      return () => {};
+    }),
   })),
 }));
 
 jest.mock('firebase/firestore', () => ({
-  getFirestore: jest.fn(),
+  getFirestore: jest.fn(() => ({
+    collection: jest.fn().mockReturnThis(),
+    doc: jest.fn().mockReturnThis(),
+    getDocs: jest.fn().mockResolvedValue({
+      docs: [{ id: 1, data: () => ({ name: 'Document' }) }],
+    }),
+    addDoc: jest.fn().mockResolvedValue({ id: 123 }),
+  })),
 }));
 
 describe('Navbar', () => {
-  beforeAll(() => {
-    initializeApp(); // Ensure this is called before any test runs
+  beforeEach(() => {
+    jest.clearAllMocks(); // Clear mocks before each test
   });
 
   test('renders Home link', () => {
@@ -37,20 +49,4 @@ describe('Navbar', () => {
     expect(linkElement).toBeInTheDocument();
   });
 });
-
-export const initializeApp = jest.fn();
-export const getAuth = jest.fn(() => ({
-  onAuthStateChanged: jest.fn((callback) => {
-    callback({
-      uid: '123',
-      email: 'test@example.com',
-    });
-    return () => {};
-  }),
-  currentUser: {
-    uid: '123',
-    email: 'test@example.com',
-  },
-}));
-export const getFirestore = jest.fn();
 
