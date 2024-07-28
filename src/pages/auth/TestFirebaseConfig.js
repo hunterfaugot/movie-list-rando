@@ -2,7 +2,7 @@
 
 "use client";
 
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { firebaseConfig } from '../../utils/firebase';

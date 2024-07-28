@@ -3,7 +3,7 @@
 "use client";
 
 import Layout from '../components/Layout';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { auth, firestore } from '../utils/firebase';
 import { signOut, updateProfile } from 'firebase/auth';
